@@ -293,7 +293,8 @@
                     @endif
                     @if($invoice->hasItemTax)
                         <td class="text-right">
-                            {{ $invoice->formatCurrency($item->tax) }}
+                            {{$item->tax_display_percentage}}%
+                            {{-- {{ $invoice->formatCurrency($item->tax) }} --}}
                         </td>
                     @endif
 
@@ -302,7 +303,15 @@
                     </td>
                 </tr>
                 @endforeach
+                
                 {{-- Summary --}}
+                <tr>
+                    <td colspan="{{ $invoice->table_columns - 2 }}" class="border-0"></td>
+                    <td class="text-right pl-0">{{ __('invoices::invoice.sub_total') }}</td>
+                    <td class="text-right pr-0">
+                        {{ $invoice->formatCurrency($invoice->total_amount - $invoice->total_taxes ) }}
+                    </td>
+                </tr>
                 @if($invoice->hasItemOrInvoiceDiscount())
                     <tr>
                         <td colspan="{{ $invoice->table_columns - 2 }}" class="border-0"></td>
@@ -330,7 +339,7 @@
                         </td>
                     </tr>
                 @endif
-                @if($invoice->hasItemOrInvoiceTax())
+                @if($invoice->total_taxes)
                     <tr>
                         <td colspan="{{ $invoice->table_columns - 2 }}" class="border-0"></td>
                         <td class="text-right pl-0">{{ __('invoices::invoice.total_taxes') }}</td>
@@ -364,12 +373,6 @@
             </p>
         @endif
 
-        <p>
-            {{ trans('invoices::invoice.amount_in_words') }}: {{ $invoice->getTotalAmountInWords() }}
-        </p>
-        <p>
-            {{ trans('invoices::invoice.pay_until') }}: {{ $invoice->getPayUntilDate() }}
-        </p>
 
         <script type="text/php">
             if (isset($pdf) && $PAGE_COUNT > 1) {
