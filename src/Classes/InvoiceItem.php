@@ -62,6 +62,11 @@ class InvoiceItem
     public $tax_percentage;
 
     /**
+     * @var float
+     */
+    public $tax_display_percentage;
+
+    /**
      * InvoiceItem constructor.
      */
     public function __construct()
@@ -285,5 +290,10 @@ class InvoiceItem
             throw new Exception('InvoiceItem: price_per_unit not defined.');
         }
 
+    }
+
+    public function taxDisplayPercentage(float $tax) {
+        $this->tax_display_percentage =  $tax;
+        return $this;
     }
 }
