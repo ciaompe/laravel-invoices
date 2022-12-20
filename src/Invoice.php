@@ -58,6 +58,11 @@ class Invoice
     /**
      * @var string
      */
+    public $page_size;
+
+    /**
+     * @var string
+     */
     public $filename;
 
     /**
@@ -159,6 +164,7 @@ class Invoice
         $this->seller   = app()->make(config('invoices.seller.class'));
         $this->items    = Collection::make([]);
         $this->template = 'default';
+        $this->page_size = 'a4';
 
         // Date
         $this->date           = Carbon::now();
@@ -257,7 +263,14 @@ class Invoice
         $view     = View::make($template, ['invoice' => $this]);
         $html     = mb_convert_encoding($view, 'HTML-ENTITIES', 'UTF-8');
 
-        $this->pdf    = Pdf::setOption(['enable_php' => true])->loadHtml($html);
+        if($this->page_size == "a4") {
+            $this->pdf    = Pdf::setOption(['enable_php' => true])->loadHtml($html);
+        }
+        
+        if($this->page_size == "80mm") {
+            $this->pdf  = Pdf::setOption(['enable_php' => true])->loadHtml($html)->setPaper(array(33.5,0,274.5,841.89));
+        }
+        
         $this->output = $this->pdf->output();
 
         return $this;

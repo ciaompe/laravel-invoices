@@ -185,6 +185,16 @@ trait InvoiceHelpers
     /**
      * @return $this
      */
+    public function pageSize(string $page_size = 'a4')
+    {
+        $this->page_size = $page_size;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function filename(string $filename)
     {
         $this->filename = sprintf('%s.pdf', $filename);
